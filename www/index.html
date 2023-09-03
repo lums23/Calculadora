@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('https://png.pngtree.com/background/20210712/original/pngtree-cute-hand-drawn-style-mathematics-education-pink-background-picture-image_1176711.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .mb-3 {
+            margin-bottom: 20px;
+        }
+        .calculator-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .calculation-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 30px;
+            color: #333;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        .result-box {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora</h1>
+        
+        <div class="calculator-container">
+            <form class="mb-3">
+                <h2 class="calculation-title">Decimal para Binário</h2>
+                <label for="decimalNumber">Número Decimal</label>
+                <input type="text" class="form-control" id="decimalNumber" oninput="validateInput(this)">
+                <button type="button" class="btn btn-primary mt-3" onclick="convertToBinary()">Converter para Binário</button>
+                <div class="result-box">
+                    Resultado: <span id="binaryResult"></span>
+                </div>
+            </form>
+
+            <form class="mb-3">
+                <h2 class="calculation-title">Calculadora de Juros</h2>
+                <label for="principal">Principal (R$)</label>
+                <input type="text" class="form-control" id="principal" oninput="validateInput(this)">
+                <label for="interestRate">Taxa de Juros (%)</label>
+                <input type="text" class="form-control" id="interestRate" oninput="validateInput(this)">
+                <label for="period">Período (Anos)</label>
+                <input type="text" class="form-control" id="period" oninput="validateInput(this)">
+                <button type="button" class="btn btn-primary mt-3" onclick="calculateInterest()">Calcular Juros</button>
+                <div class="result-box">
+                    Resultado: R$<span id="interestResult"></span>
+                </div>
+            </form>
+
+            <form class="mb-3">
+                <h2 class="calculation-title">Verificador de Número Primo</h2>
+                <label for="primeNumber">Número</label>
+                <input type="text" class="form-control" id="primeNumber" oninput="validateInput(this)">
+                <button type="button" class="btn btn-primary mt-3" onclick="checkPrime()">Verificar Primo</button>
+                <div class="result-box">
+                    Resultado: <span id="primeResult"></span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function validateInput(input) {
+            input.value = input.value.replace(/[^\d.]/g, '');
+        }
+
+        function decimalToBinary(decimal) {
+            return (decimal >>> 0).toString(2);
+        }
+
+        function isPrime(num) {
+            if (num <= 1) {
+                return false;
+            }
+            if (num <= 3) {
+                return true;
+            }
+            if (num % 2 === 0 || num % 3 === 0) {
+                return false;
+            }
+            let i = 5;
+            while (i * i <= num) {
+                if (num % i === 0 || num % (i + 2) === 0) {
+                    return false;
+                }
+                i += 6;
+            }
+            return true;
+        }
+
+        function calculateInterest() {
+            const principal = parseFloat(document.getElementById('principal').value);
+            const interestRate = parseFloat(document.getElementById('interestRate').value);
+            const period = parseFloat(document.getElementById('period').value);
+            
+            const interestResult = calcularJuros(principal, interestRate, period);
+            document.getElementById('interestResult').textContent = isNaN(interestResult) ? 'Preencha os campos corretamente' : interestResult.toFixed(2);
+        }
+
+        function checkPrime() {
+            const primeNumber = parseInt(document.getElementById('primeNumber').value);
+            const isPrimeResult = isPrime(primeNumber);
+            document.getElementById('primeResult').textContent = isPrimeResult ? 'É primo' : 'Não é primo';
+        }
+
+        function convertToBinary() {
+            const decimalNumber = parseInt(document.getElementById('decimalNumber').value);
+            const binaryResult = decimalToBinary(decimalNumber);
+            document.getElementById('binaryResult').textContent = binaryResult;
+        }
+
+        function calcularJuros(principal, taxaDeJuros, periodo) {
+            const juros = (principal * taxaDeJuros * periodo) / 100;
+            return principal + juros;
+        }
+    </script>
+</body>
+</html>
